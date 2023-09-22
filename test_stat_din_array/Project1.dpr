@@ -12,11 +12,11 @@ var s1,s2 : shortstring;
     s5 :string;
     m1,m2 : tsa;
     m3 :tsa;
-    m4,m5 : array of byte;
+    m4,m5,m5_ : array of byte;
     m6 : array of array of array of byte;
     i, j, k : int32;
     eq:boolean;
-    rec1,rec2 : record
+    rec1,rec2 : record //2+1+256+4 = 263 => 264б не увидел округлени€
                 i,j:byte;
                 c:ansichar;
                 s:shortstring;
@@ -62,20 +62,39 @@ randomize;
       break;
       end;
     if eq then writeln('m1 = m3 !') else writeln('m1 <> m3 !');
-    write('ƒалее работаем с динамическим массивом...');
+    with rec1 do
+      begin
+        i:=1;
+        j:=2;
+        c:='z';
+        s:='Hello, world';
+        ar[1]:=i; ar[2]:=j; ar[3]:=3;ar[4]:=4;
+      end;
+      rec2:=rec1;
+      writeln('Adress rec1,rec2=',uint32(@rec1),' ',uint32(@rec2));
+      writeln(rec2.s);
+      writeln('Size rec=',uint32(@rec2)-uint32(@rec1),'=',sizeof(rec1));
+      writeln('rec1.ar[3] = ',rec1.ar[3]);
+    write('ƒалее работаем с динамическим структурами, массивом...');
     Readln;
     //ƒобавл€ем динамический массив
     setlength(m4,1000);
     //m4:=m1; //syntax Error
     setlength(m5,1100);
-    for i :=1 to 1000 do
+    for i :=1 to 999 do
       m4[i]:=random(256);
   writeln('Adress din array (before copy): ',int32(@m4[1]),' ',int32(@m5[1]));
     m5:=m4;
   writeln('Adress din array (after copy): ',int32(@m4[1]),' ',int32(@m5[1]));
-  m5[0]:=0;
+  m5[0]:=121;
   writeln('Adress din array (after m5[0]:=0): ',int32(@m4[1]),' ',int32(@m5[1]));
   readln;
+  setlength(m5_,1000);
+  writeln('Adress din array (before copy): ',int32(@m4[1]),' ',int32(@m5_[1]));
+  m5_:=m4;
+  writeln('Adress din array (after copy): ',int32(@m4[1]),' ',int32(@m5_[1]));
+  m5_[0]:=123;
+  writeln('Adress din array (after m5_[0]:=0): ',int32(@m4[1]),' ',int32(@m5_[1]));
   eq:=true;
   for i:=1 to 1000 do
     if m4[i]<>m5[i] then
@@ -94,17 +113,5 @@ for i:=0 to 9 do
 for i := 0 to 9 do
   for j:=0 to 9 do
     setlength(m6[i,j],20);// 3
-with rec1 do
-begin
-  i:=1;
-  j:=2;
-  c:='z';
-  s:='Hello, world';
-  ar[1]:=i; ar[2]:=j; ar[3]:=3;ar[4]:=4;
-end;
-rec2:=rec1;
-writeln('Adress rec1,rec2=',uint32(@rec1),' ',uint32(@rec2));
-writeln(rec2.s);
-writeln('Size rec=',uint32(@rec2)-uint32(@rec1),'=',sizeof(rec1));
   until false;
 end.
