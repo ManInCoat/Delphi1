@@ -25,7 +25,7 @@ var s1,s2 : shortstring;
 begin
 randomize;
   repeat
-  writeln('Enter new string > ');
+  write('Enter new string > ');
   readln(s1);
   s2:=s1;
   writeln('Adress shortstrings: ',int32(@s1[1]),' ',int32(@s2[1]),#10,s2);
@@ -39,7 +39,7 @@ randomize;
   //
   for i :=1 to 1000 do
     m1[i]:=random(256);
-  m2:=m1;
+  m2:=m1;//copy
   writeln('Adress stat arrays: ',int32(@m1[1]),' ',int32(@m2[1]));
   eq:=true;
   for i:=1 to 1000 do
@@ -62,6 +62,8 @@ randomize;
       break;
       end;
     if eq then writeln('m1 = m3 !') else writeln('m1 <> m3 !');
+    write('Далее работаем с динамическим массивом...');
+    Readln;
     //Добавляем динамический массив
     setlength(m4,1000);
     //m4:=m1; //syntax Error
